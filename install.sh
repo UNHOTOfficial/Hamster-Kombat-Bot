@@ -174,7 +174,7 @@ dailyCombo() {
         echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
     fi
 
-    sleep 10
+    sleep $((RANDOM % 14 + 2))
     # endregion
 
     # region card2
@@ -204,14 +204,14 @@ dailyCombo() {
 
     # Check the HTTP status code and print a message
     if [ $STATUS_CODE -eq 200 ]; then
-        echo "Card 1 bought - [$(date +%T)]"
+        echo "Card 2 bought - [$(date +%T)]"
     else
         # Remove the HTTP status code from the response body
         RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
         echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
     fi
 
-    sleep 10
+    sleep $((RANDOM % 14 + 2))
     # endregion
 
     # region card3
@@ -241,7 +241,39 @@ dailyCombo() {
 
     # Check the HTTP status code and print a message
     if [ $STATUS_CODE -eq 200 ]; then
-        echo "Card 1 bought - [$(date +%T)]"
+        echo "Card 3 bought - [$(date +%T)]"
+
+    else
+        # Remove the HTTP status code from the response body
+        RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+        echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
+    fi
+    # endregion
+
+    # region get combo
+    # Send the POST request curl and save the HTTP status code and response body
+    RESPONSE=$(
+        curl -s -w "\n%{http_code}\n" -X POST $URL \
+            -H "User-Agent: Mozilla/5.0 (Android 12; Mobile; rv:102.0) Gecko/102.0 Firefox/102.0" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $AUTHORIZATION" \
+            -H "Accept: application/json" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Referer: https://hamsterkombat.io/" \
+            -H "Origin: https://hamsterkombat.io" \
+            -H "Connection: keep-alive" \
+            -H "Sec-Fetch-Dest: empty" \
+            -H "Sec-Fetch-Mode: cors" \
+            -H "Sec-Fetch-Site: same-site" \
+            -H "Priority: u=4"
+    )
+
+    # Extract the HTTP status code from the last line of the response
+    STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
+
+    # Check the HTTP status code and print a message
+    if [ $STATUS_CODE -eq 200 ]; then
+        echo "Combo claimed - [$(date +%T)]"
 
     else
         # Remove the HTTP status code from the response body
