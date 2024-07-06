@@ -129,10 +129,6 @@ dailyStreak() {
 
 }
 
-# Function to buy daily combo cards
-# dailyCombo(){
-
-# }
 
 # Function to read user's choice
 read_choice() {
