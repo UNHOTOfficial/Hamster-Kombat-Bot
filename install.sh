@@ -19,21 +19,13 @@ show_menu() {
 
 # Update bot inits
 updateInit() {
-    # URL to send the GET request to
-    CONFIG_URL="https://nabikaz.github.io/HamsterKombat-API/config.json"
+    # Ask the user to enter three strings
+    read -p "Enter the first card: " card1
+    read -p "Enter the second card: " card2
+    read -p "Enter the third card: " card3
 
-    # Send the GET request using curl and show the response
-    RESPONSE=$(curl -s -X GET $CONFIG_URL)
-
-    # Parse the morseCode and dailyCards values from the response
-    MORSE_CODE=$(echo $RESPONSE | jq -r '.morseCode')
-    DAILY_CARD1=$(echo $RESPONSE | jq -r '.dailyCards[0]')
-    DAILY_CARD2=$(echo $RESPONSE | jq -r '.dailyCards[1]')
-    DAILY_CARD3=$(echo $RESPONSE | jq -r '.dailyCards[2]')
-
-    # Print the parsed values
-    echo "Morse Code: $MORSE_CODE"
-    echo "Daily Cards: $DAILY_CARDS"
+    # Print a message to indicate that the strings have been saved
+    echo "Card1 : '$card1', Card2 : '$card2', Card3 : '$card3' have been saved."
 }
 
 # Function to claim the daily cipher
@@ -48,19 +40,22 @@ cipher() {
     DATA="{\"cipher\":\"$MORSE_CODE\"}"
 
     # Send the POST request curl and save the HTTP status code and response body
-    RESPONSE=$(curl -s -w "\n%{http_code}\n" -X POST $URL \
-        -H "Content-Type: application/json" \
-        -H "Authorization: $AUTHORIZATION" \
-        -H "Accept: application/json" \
-        -H "Accept-Language: en-US,en;q=0.9" \
-        -H "Referer: https://hamsterkombat.io/" \
-        -H "Origin: https://hamsterkombat.io" \
-        -H "Connection: keep-alive" \
-        -H "Sec-Fetch-Dest: empty" \
-        -H "Sec-Fetch-Mode: cors" \
-        -H "Sec-Fetch-Site: same-site" \
-        -H "Priority: u=4" \
-        -d "$DATA")
+    RESPONSE=$(
+        curl -s -w "\n%{http_code}\n" -X POST $URL \
+            -H "User-Agent: Mozilla/5.0 (Android 12; Mobile; rv:102.0) Gecko/102.0 Firefox/102.0" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $AUTHORIZATION" \
+            -H "Accept: application/json" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Referer: https://hamsterkombat.io/" \
+            -H "Origin: https://hamsterkombat.io" \
+            -H "Connection: keep-alive" \
+            -H "Sec-Fetch-Dest: empty" \
+            -H "Sec-Fetch-Mode: cors" \
+            -H "Sec-Fetch-Site: same-site" \
+            -H "Priority: u=4" \
+            -d "$DATA"
+    )
 
     # Extract the HTTP status code from the last line of the response
     STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
@@ -129,6 +124,120 @@ dailyStreak() {
 
 }
 
+# Function to buy combo cards
+dailyCombo() {
+    # Ask the user to enter the Authorization
+    read -p "Enter the Authorization: " AUTHORIZATION
+
+    # URL to send the POST request to
+    URL="https://api.hamsterkombat.io/clicker/buy-upgrade"
+
+    # region card1
+    # JSON data to be sent in the POST request
+    DATA1="{\"upgradeId\":\"$card1\",\"timestamp\":$(date +%s%3N)}"
+
+    # Send the POST request curl and save the HTTP status code and response body
+    RESPONSE=$(
+        curl -s -w "\n%{http_code}\n" -X POST $URL \
+            -H "User-Agent: Mozilla/5.0 (Android 12; Mobile; rv:102.0) Gecko/102.0 Firefox/102.0" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $AUTHORIZATION" \
+            -H "Accept: application/json" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Referer: https://hamsterkombat.io/" \
+            -H "Origin: https://hamsterkombat.io" \
+            -H "Connection: keep-alive" \
+            -H "Sec-Fetch-Dest: empty" \
+            -H "Sec-Fetch-Mode: cors" \
+            -H "Sec-Fetch-Site: same-site" \
+            -H "Priority: u=4" \
+            -d "$DATA1"
+    )
+
+    # Extract the HTTP status code from the last line of the response
+    STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
+
+    # Check the HTTP status code and print a message
+    if [ $STATUS_CODE -eq 200 ]; then
+        echo "Operation successful."
+    else
+        # Remove the HTTP status code from the response body
+        RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+        echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
+    fi
+    # endregion
+
+    # region card2
+    # JSON data to be sent in the POST request
+    DATA2="{\"upgradeId\":\"$card2\",\"timestamp\":$(date +%s%3N)}"
+
+    # Send the POST request curl and save the HTTP status code and response body
+    RESPONSE=$(
+        curl -s -w "\n%{http_code}\n" -X POST $URL \
+            -H "User-Agent: Mozilla/5.0 (Android 12; Mobile; rv:102.0) Gecko/102.0 Firefox/102.0" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $AUTHORIZATION" \
+            -H "Accept: application/json" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Referer: https://hamsterkombat.io/" \
+            -H "Origin: https://hamsterkombat.io" \
+            -H "Connection: keep-alive" \
+            -H "Sec-Fetch-Dest: empty" \
+            -H "Sec-Fetch-Mode: cors" \
+            -H "Sec-Fetch-Site: same-site" \
+            -H "Priority: u=4" \
+            -d "$DATA2"
+    )
+
+    # Extract the HTTP status code from the last line of the response
+    STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
+
+    # Check the HTTP status code and print a message
+    if [ $STATUS_CODE -eq 200 ]; then
+        echo "Operation successful."
+    else
+        # Remove the HTTP status code from the response body
+        RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+        echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
+    fi
+    # endregion
+
+    # region card3
+    # JSON data to be sent in the POST request
+    DATA3="{\"upgradeId\":\"$card3\",\"timestamp\":$(date +%s%3N)}"
+
+    # Send the POST request curl and save the HTTP status code and response body
+    RESPONSE=$(
+        curl -s -w "\n%{http_code}\n" -X POST $URL \
+            -H "User-Agent: Mozilla/5.0 (Android 12; Mobile; rv:102.0) Gecko/102.0 Firefox/102.0" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $AUTHORIZATION" \
+            -H "Accept: application/json" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Referer: https://hamsterkombat.io/" \
+            -H "Origin: https://hamsterkombat.io" \
+            -H "Connection: keep-alive" \
+            -H "Sec-Fetch-Dest: empty" \
+            -H "Sec-Fetch-Mode: cors" \
+            -H "Sec-Fetch-Site: same-site" \
+            -H "Priority: u=4" \
+            -d "$DATA3"
+    )
+
+    # Extract the HTTP status code from the last line of the response
+    STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
+
+    # Check the HTTP status code and print a message
+    if [ $STATUS_CODE -eq 200 ]; then
+        echo "Operation successful."
+    else
+        # Remove the HTTP status code from the response body
+        RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+        echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
+    fi
+    # endregion
+}
+
 # Function to read user's choice
 read_choice() {
     read -p "Enter your choice [1-4]: " choice
@@ -142,7 +251,9 @@ read_choice() {
     3)
         dailyStreak
         ;;
-
+    4)
+        dailyCombo
+        ;;
     0)
         exit 0
         ;;
