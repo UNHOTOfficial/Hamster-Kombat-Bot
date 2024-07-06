@@ -129,7 +129,7 @@ dailyStreak() {
 
 }
 
-# # Function to buy daily combo cards
+# Function to buy daily combo cards
 # dailyCombo(){
 
 # }
@@ -149,8 +149,8 @@ read_choice() {
         ;;
 
     4)
-        dailyCombo
-        ;;
+        # dailyCombo
+        # ;;
 
     0) exit 0 ;;
     *) echo -e "${RED}Invalid choice${NC}" ;;
