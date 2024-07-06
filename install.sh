@@ -60,6 +60,9 @@ get_config() {
     # URL to send the GET request to
     CONFIG_URL="https://nabikaz.github.io/HamsterKombat-API/config.json"
 
-    # Send the GET request using curl and show the response headers
-    curl -i -X GET $CONFIG_URL
+    # Send the GET request using curl and show the response
+    RESPONSE=$(curl -s -X GET $CONFIG_URL)
+
+    # Print the response
+    echo "Response: $RESPONSE"
 }
