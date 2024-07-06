@@ -165,6 +165,8 @@ dailyCombo() {
         RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
         echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
     fi
+
+    sleep 5
     # endregion
 
     # region card2
@@ -200,6 +202,8 @@ dailyCombo() {
         RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
         echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
     fi
+
+    sleep 5
     # endregion
 
     # region card3
