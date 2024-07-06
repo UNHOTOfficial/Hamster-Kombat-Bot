@@ -241,7 +241,8 @@ dailyCombo() {
 
     # Check the HTTP status code and print a message
     if [ $STATUS_CODE -eq 200 ]; then
-        echo "Operation successful."
+        echo "Card 1 bought - [$(date +%T)]"
+
     else
         # Remove the HTTP status code from the response body
         RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
