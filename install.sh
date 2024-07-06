@@ -16,6 +16,24 @@ show_menu() {
     echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
 }
 
+# Update bot inits
+updateInit() {
+    # URL to send the GET request to
+    CONFIG_URL="https://nabikaz.github.io/HamsterKombat-API/config.json"
+
+    # Send the GET request using curl and show the response
+    RESPONSE=$(curl -s -X GET $CONFIG_URL)
+
+    # Parse the morseCode and dailyCards values from the response
+    MORSE_CODE=$(echo $RESPONSE | jq -r '.morseCode')
+    DAILY_CARDS=$(echo $RESPONSE | jq -r '.dailyCards[]')
+
+    # Print the parsed values
+    echo "Morse Code: $MORSE_CODE"
+    echo "Daily Cards: $DAILY_CARDS"
+}
+
+# Function to claim the daily cipher
 cipher() {
     # Ask the user to enter the Authorization
     read -p "Enter the Authorization: " AUTHORIZATION
@@ -42,42 +60,67 @@ cipher() {
         -d "$DATA")
 
     # Extract the HTTP status code from the last line of the response
-STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
+    STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
 
-# Remove the HTTP status code from the response body
-RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+    # Remove the HTTP status code from the response body
+    RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
 
-# Check the HTTP status code and print a message
-if [ $STATUS_CODE -eq 200 ]; then
-    echo "Operation successful."
-elif [ $STATUS_CODE -eq 400 ]; then
-    # Check the response body for the specific error code
-    if echo "$RESPONSE_BODY" | grep -q '"error_code": "DAILY_CIPHER_DOUBLE_CLAIMED"'; then
-        # Extract the error message from the response body
-        ERROR_MESSAGE=$(echo "$RESPONSE_BODY" | grep -oP '(?<="error_message": ")[^"]*')
-        echo "Error: $ERROR_MESSAGE"
+    # Check the HTTP status code and print a message
+    if [ $STATUS_CODE -eq 200 ]; then
+        echo "Operation successful."
+    elif [ $STATUS_CODE -eq 400 ]; then
+        # Check the response body for the specific error code
+        if echo "$RESPONSE_BODY" | grep -q '"error_code": "DAILY_CIPHER_DOUBLE_CLAIMED"'; then
+            # Extract the error message from the response body
+            ERROR_MESSAGE=$(echo "$RESPONSE_BODY" | grep -oP '(?<="error_message": ")[^"]*')
+            echo "Error: $ERROR_MESSAGE"
+        else
+            echo "Operation failed: $RESPONSE_BODY"
+        fi
     else
-        echo "Operation failed: $RESPONSE_BODY"
+        echo "Unexpected status code: $STATUS_CODE"
     fi
-else
-    echo "Unexpected status code: $STATUS_CODE"
-fi
+
 }
 
-get_config() {
-    # URL to send the GET request to
-    CONFIG_URL="https://nabikaz.github.io/HamsterKombat-API/config.json"
+# Function to claim the daily reward
+dailyStreak() {
+    # Ask the user to enter the Authorization
+    read -p "Enter the Authorization: " AUTHORIZATION
 
-    # Send the GET request using curl and show the response
-    RESPONSE=$(curl -s -X GET $CONFIG_URL)
+    # URL to send the POST request to
+    URL="https://api.hamsterkombat.io/clicker/check-task"
 
-    # Parse the morseCode and dailyCards values from the response
-    MORSE_CODE=$(echo $RESPONSE | jq -r '.morseCode')
-    DAILY_CARDS=$(echo $RESPONSE | jq -r '.dailyCards[]')
+    # JSON data to be sent in the POST request
+    DATA="{"taskId":"streak_days"}"
 
-    # Print the parsed values
-    echo "Morse Code: $MORSE_CODE"
-    echo "Daily Cards: $DAILY_CARDS"
+    # Send the POST request curl and save the HTTP status code and response body
+    RESPONSE=$(curl -s -w "\n%{http_code}\n" -X POST $URL \
+        -H "Content-Type: application/json" \
+        -H "Authorization: $AUTHORIZATION" \
+        -H "Accept: application/json" \
+        -H "Accept-Language: en-US,en;q=0.9" \
+        -H "Referer: https://hamsterkombat.io/" \
+        -H "Origin: https://hamsterkombat.io" \
+        -H "Connection: keep-alive" \
+        -H "Sec-Fetch-Dest: empty" \
+        -H "Sec-Fetch-Mode: cors" \
+        -H "Sec-Fetch-Site: same-site" \
+        -H "Priority: u=4" \
+        -d "$DATA")
+
+    # Extract the HTTP status code from the last line of the response
+    STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
+
+    # Check the HTTP status code and print a message
+    if [ $STATUS_CODE -eq 200 ]; then
+        echo "Operation successful."
+    else
+        # Remove the HTTP status code from the response body
+        RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+        echo "Operation failed with status code: $STATUS_CODE : $RESPONSE_BODY"
+    fi
+
 }
 
 # Function to read user's choice
