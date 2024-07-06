@@ -13,7 +13,8 @@ show_menu() {
     echo -e "${YELLOW}1.${NC} ${BLUE}Update Bot Data${NC}"
     echo -e "${YELLOW}2.${NC} ${BLUE}Get daily cipher${NC}"
     echo -e "${YELLOW}3.${NC} ${BLUE}Get daily reward (Only use once a day!)${NC}"
-    echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
+    echo -e "${YELLOW}4.${NC} ${BLUE}Get daily combo${NC}"
+    echo -e "${YELLOW}0.${NC} ${BLUE}Exit${NC}"
 }
 
 # Update bot inits
@@ -26,7 +27,9 @@ updateInit() {
 
     # Parse the morseCode and dailyCards values from the response
     MORSE_CODE=$(echo $RESPONSE | jq -r '.morseCode')
-    DAILY_CARDS=$(echo $RESPONSE | jq -r '.dailyCards[]')
+    DAILY_CARD1=$(echo $RESPONSE | jq -r '.dailyCards[0]')
+    DAILY_CARD2=$(echo $RESPONSE | jq -r '.dailyCards[1]')
+    DAILY_CARD3=$(echo $RESPONSE | jq -r '.dailyCards[2]')
 
     # Print the parsed values
     echo "Morse Code: $MORSE_CODE"
@@ -145,7 +148,11 @@ read_choice() {
         dailyStreak
         ;;
 
-    4) exit 0 ;;
+    4)
+        dailyCombo
+        ;;
+
+    0) exit 0 ;;
     *) echo -e "${RED}Invalid choice${NC}" ;;
     esac
 }
