@@ -143,7 +143,9 @@ read_choice() {
         dailyStreak
         ;;
 
-    0) exit 0 ;;
+    0)
+        exit 0
+        ;;
     *) echo -e "${RED}Invalid choice${NC}" ;;
     esac
 }
