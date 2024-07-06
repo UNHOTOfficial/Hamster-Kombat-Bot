@@ -129,7 +129,6 @@ dailyStreak() {
 
 }
 
-
 # Function to read user's choice
 read_choice() {
     read -p "Enter your choice [1-4]: " choice
@@ -143,10 +142,6 @@ read_choice() {
     3)
         dailyStreak
         ;;
-
-    4)
-        # dailyCombo
-        # ;;
 
     0) exit 0 ;;
     *) echo -e "${RED}Invalid choice${NC}" ;;
