@@ -53,21 +53,22 @@ get_config() {
     echo "Daily Cards: $DAILY_CARDS"
 }
 
+# Function to read user's choice
+read_choice() {
+    read -p "Enter your choice [1-4]: " choice
+    case $choice in
+        1)
+            get_config
+            ;;
+        2) echo -e "${RED}You chose Option 2${NC}" ;;
+        3) echo -e "${RED}You chose Option 3${NC}" ;;
+        4) exit 0 ;;
+        *) echo -e "${RED}Invalid choice${NC}" ;;
+    esac
+}
+
 # Main loop
 while true; do
     show_menu
     read_choice
 done
-# Function to read user's choice
-read_choice() {
-    read -p "Enter your choice [1-4]: " choice
-    case $choice in
-    1)
-        get_config
-        ;;
-    2) echo -e "${RED}You chose Option 2${NC}" ;;
-    3) echo -e "${RED}You chose Option 3${NC}" ;;
-    4) exit 0 ;;
-    *) echo -e "${RED}Invalid choice${NC}" ;;
-    esac
-}
