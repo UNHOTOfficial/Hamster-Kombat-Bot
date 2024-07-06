@@ -64,7 +64,6 @@ read_choice() {
     read -p "Enter your choice [1-4]: " choice
     case $choice in
     1)
-        echo -e "${RED}You chose Option 1${NC}"
         get_config
         ;;
     2) echo -e "${RED}You chose Option 2${NC}" ;;
