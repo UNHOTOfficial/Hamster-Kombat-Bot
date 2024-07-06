@@ -16,26 +16,26 @@ show_menu() {
     echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
 }
 
-# URL to send the POST request to
-URL="https://api.hamsterkombat.io/clicker/claim-daily-cipher" # Replace with the actual URL
+# # URL to send the POST request to
+# URL="https://api.hamsterkombat.io/clicker/claim-daily-cipher" # Replace with the actual URL
 
-# JSON data to be sent in the POST request
-DATA='{"cipher":"SWAP"}'
+# # JSON data to be sent in the POST request
+# DATA='{"cipher":"SWAP"}'
 
-# Send the POST request using curl
-curl -X POST $URL \
-    -H "Content-Type: application/json" \
-    -H "Authorization: " \
-    -H "Accept: application/json" \
-    -H "Accept-Language: en-US,en;q=0.9" \
-    -H "Referer: https://hamsterkombat.io/" \
-    -H "Origin: https://hamsterkombat.io" \
-    -H "Connection: keep-alive" \
-    -H "Sec-Fetch-Dest: empty" \
-    -H "Sec-Fetch-Mode: cors" \
-    -H "Sec-Fetch-Site: same-site" \
-    -H "Priority: u=4" \
-    -d "$DATA"
+# # Send the POST request using curl
+# curl -X POST $URL \
+#     -H "Content-Type: application/json" \
+#     -H "Authorization: " \
+#     -H "Accept: application/json" \
+#     -H "Accept-Language: en-US,en;q=0.9" \
+#     -H "Referer: https://hamsterkombat.io/" \
+#     -H "Origin: https://hamsterkombat.io" \
+#     -H "Connection: keep-alive" \
+#     -H "Sec-Fetch-Dest: empty" \
+#     -H "Sec-Fetch-Mode: cors" \
+#     -H "Sec-Fetch-Site: same-site" \
+#     -H "Priority: u=4" \
+#     -d "$DATA"
 
 get_config() {
     # URL to send the GET request to
