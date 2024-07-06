@@ -10,7 +10,7 @@ NC='\033[0m' # No Color
 # Function to display the menu
 show_menu() {
     echo -e "${GREEN}Welcome to the User Menu${NC}"
-    echo -e "${YELLOW}1.${NC} ${BLUE}Option 1${NC}"
+    echo -e "${YELLOW}1.${NC} ${BLUE}Update Bot Data${NC}"
     echo -e "${YELLOW}2.${NC} ${BLUE}Option 2${NC}"
     echo -e "${YELLOW}3.${NC} ${BLUE}Option 3${NC}"
     echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
@@ -21,7 +21,7 @@ read_choice() {
     read -p "Enter your choice [1-4]: " choice
     case $choice in
         1) echo -e "${RED}You chose Option 1${NC}"
-           get_config;
+           get_config ;;
         2) echo -e "${RED}You chose Option 2${NC}" ;;
         3) echo -e "${RED}You chose Option 3${NC}" ;;
         4) exit 0 ;;
@@ -63,6 +63,11 @@ get_config() {
     # Send the GET request using curl and show the response
     RESPONSE=$(curl -s -X GET $CONFIG_URL)
 
-    # Print the response
-    echo "Response: $RESPONSE"
+    # Parse the morseCode and dailyCards values from the response
+    MORSE_CODE=$(echo $RESPONSE | jq -r '.morseCode')
+    DAILY_CARDS=$(echo $RESPONSE | jq -r '.dailyCards[]')
+
+    # Print the parsed values
+    echo "Morse Code: $MORSE_CODE"
+    echo "Daily Cards: $DAILY_CARDS"
 }
