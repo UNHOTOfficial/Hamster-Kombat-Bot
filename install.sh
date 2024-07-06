@@ -11,31 +11,45 @@ NC='\033[0m' # No Color
 show_menu() {
     echo -e "${GREEN}Welcome to the User Menu${NC}"
     echo -e "${YELLOW}1.${NC} ${BLUE}Update Bot Data${NC}"
-    echo -e "${YELLOW}2.${NC} ${BLUE}Option 2${NC}"
+    echo -e "${YELLOW}2.${NC} ${BLUE}Get daily cipher 2${NC}"
     echo -e "${YELLOW}3.${NC} ${BLUE}Option 3${NC}"
     echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
 }
 
-# # URL to send the POST request to
-# URL="https://api.hamsterkombat.io/clicker/claim-daily-cipher" # Replace with the actual URL
+cipher() {
+    # Ask the user to enter the Authorization
+    read -p "Enter the Authorization: " AUTHORIZATION
 
-# # JSON data to be sent in the POST request
-# DATA='{"cipher":"SWAP"}'
+    # URL to send the POST request to
+    URL="https://api.hamsterkombat.io/clicker/claim-daily-cipher" # Replace with the actual URL
 
-# # Send the POST request using curl
-# curl -X POST $URL \
-#     -H "Content-Type: application/json" \
-#     -H "Authorization: " \
-#     -H "Accept: application/json" \
-#     -H "Accept-Language: en-US,en;q=0.9" \
-#     -H "Referer: https://hamsterkombat.io/" \
-#     -H "Origin: https://hamsterkombat.io" \
-#     -H "Connection: keep-alive" \
-#     -H "Sec-Fetch-Dest: empty" \
-#     -H "Sec-Fetch-Mode: cors" \
-#     -H "Sec-Fetch-Site: same-site" \
-#     -H "Priority: u=4" \
-#     -d "$DATA"
+    # JSON data to be sent in the POST request
+    DATA="{\"cipher\":\"$MORSE_CODE\"}"
+
+    # Send the POST request curl and save the HTTP status code
+    STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}\n" -X POST $URL \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $AUTHORIZATION" \
+        -H "Accept: application/json" \
+        -H "Accept-Language: en-US,en;q=0.9" \
+        -H "Referer: https://hamsterkombat.io/" \
+        -H "Origin: https://hamsterkombat.io" \
+        -H "Connection: keep-alive" \
+        -H "Sec-Fetch-Dest: empty" \
+        -H "Sec-Fetch-Mode: cors" \
+        -H "Sec-Fetch-Site: same-site" \
+        -H "Priority: u=4" \
+        -d "$DATA")
+
+    # Check the HTTP status code and print a message
+    if [ $STATUS_CODE -eq 200 ]; then
+        echo "Operation successful."
+    elif [ $STATUS_CODE -eq 400 ]; then
+        echo "Operation failed."
+    else
+        echo "Unexpected status code: $STATUS_CODE"
+    fi
+}
 
 get_config() {
     # URL to send the GET request to
@@ -57,13 +71,17 @@ get_config() {
 read_choice() {
     read -p "Enter your choice [1-4]: " choice
     case $choice in
-        1)
-            get_config
-            ;;
-        2) echo -e "${RED}You chose Option 2${NC}" ;;
-        3) echo -e "${RED}You chose Option 3${NC}" ;;
-        4) exit 0 ;;
-        *) echo -e "${RED}Invalid choice${NC}" ;;
+    1)
+        echo -e "${RED}You chose Option 1${NC}"
+        get_config
+        ;;
+    2)
+        echo -e "${RED}You chose Option 2${NC}"
+        cipher
+        ;;
+    3) echo -e "${RED}You chose Option 3${NC}" ;;
+    4) exit 0 ;;
+    *) echo -e "${RED}Invalid choice${NC}" ;;
     esac
 }
 
