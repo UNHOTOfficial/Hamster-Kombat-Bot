@@ -11,7 +11,7 @@ NC='\033[0m' # No Color
 show_menu() {
     echo -e "${GREEN}Welcome to the User Menu${NC}"
     echo -e "${YELLOW}1.${NC} ${BLUE}Update Bot Data${NC}"
-    echo -e "${YELLOW}2.${NC} ${BLUE}Get daily cipher 2${NC}"
+    echo -e "${YELLOW}2.${NC} ${BLUE}Get daily cipher${NC}"
     echo -e "${YELLOW}3.${NC} ${BLUE}Option 3${NC}"
     echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
 }
@@ -21,15 +21,15 @@ cipher() {
     read -p "Enter the Authorization: " AUTHORIZATION
 
     # URL to send the POST request to
-    URL="https://api.hamsterkombat.io/clicker/claim-daily-cipher" # Replace with the actual URL
+    URL="https://api.hamsterkombat.io/clicker/claim-daily-cipher"
 
     # JSON data to be sent in the POST request
     DATA="{\"cipher\":\"$MORSE_CODE\"}"
 
-    # Send the POST request curl and save the HTTP status code
-    STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}\n" -X POST $URL \
+    # Send the POST request curl and save the HTTP status code and response body
+    RESPONSE=$(curl -s -w "\n%{http_code}\n" -X POST $URL \
         -H "Content-Type: application/json" \
-        -H "Authorization: Bearer $AUTHORIZATION" \
+        -H "Authorization: $AUTHORIZATION" \
         -H "Accept: application/json" \
         -H "Accept-Language: en-US,en;q=0.9" \
         -H "Referer: https://hamsterkombat.io/" \
@@ -41,14 +41,27 @@ cipher() {
         -H "Priority: u=4" \
         -d "$DATA")
 
-    # Check the HTTP status code and print a message
-    if [ $STATUS_CODE -eq 200 ]; then
-        echo "Operation successful."
-    elif [ $STATUS_CODE -eq 400 ]; then
-        echo "Operation failed."
+    # Extract the HTTP status code from the last line of the response
+STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
+
+# Remove the HTTP status code from the response body
+RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+
+# Check the HTTP status code and print a message
+if [ $STATUS_CODE -eq 200 ]; then
+    echo "Operation successful."
+elif [ $STATUS_CODE -eq 400 ]; then
+    # Check the response body for the specific error code
+    if echo "$RESPONSE_BODY" | grep -q '"error_code": "DAILY_CIPHER_DOUBLE_CLAIMED"'; then
+        # Extract the error message from the response body
+        ERROR_MESSAGE=$(echo "$RESPONSE_BODY" | grep -oP '(?<="error_message": ")[^"]*')
+        echo "Error: $ERROR_MESSAGE"
     else
-        echo "Unexpected status code: $STATUS_CODE"
+        echo "Operation failed: $RESPONSE_BODY"
     fi
+else
+    echo "Unexpected status code: $STATUS_CODE"
+fi
 }
 
 get_config() {
@@ -72,11 +85,9 @@ read_choice() {
     read -p "Enter your choice [1-4]: " choice
     case $choice in
     1)
-        echo -e "${RED}You chose Option 1${NC}"
         get_config
         ;;
     2)
-        echo -e "${RED}You chose Option 2${NC}"
         cipher
         ;;
     3) echo -e "${RED}You chose Option 3${NC}" ;;
