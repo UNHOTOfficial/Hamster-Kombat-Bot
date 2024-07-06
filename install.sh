@@ -12,7 +12,7 @@ show_menu() {
     echo -e "${GREEN}Welcome to the User Menu${NC}"
     echo -e "${YELLOW}1.${NC} ${BLUE}Update Bot Data${NC}"
     echo -e "${YELLOW}2.${NC} ${BLUE}Get daily cipher${NC}"
-    echo -e "${YELLOW}3.${NC} ${BLUE}Option 3${NC}"
+    echo -e "${YELLOW}3.${NC} ${BLUE}Get daily reward (Only use once a day!)${NC}"
     echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
 }
 
@@ -92,7 +92,7 @@ dailyStreak() {
     URL="https://api.hamsterkombat.io/clicker/check-task"
 
     # JSON data to be sent in the POST request
-    DATA="{"taskId":"streak_days"}"
+    DATA="{\"taskId\":\"streak_days\"}"
 
     # Send the POST request curl and save the HTTP status code and response body
     RESPONSE=$(curl -s -w "\n%{http_code}\n" -X POST $URL \
@@ -128,12 +128,15 @@ read_choice() {
     read -p "Enter your choice [1-4]: " choice
     case $choice in
     1)
-        get_config
+        updateInit
         ;;
     2)
         cipher
         ;;
-    3) echo -e "${RED}You chose Option 3${NC}" ;;
+    3)
+        dailyStreak
+        ;;
+
     4) exit 0 ;;
     *) echo -e "${RED}Invalid choice${NC}" ;;
     esac
