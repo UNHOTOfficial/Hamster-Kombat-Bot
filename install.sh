@@ -16,19 +16,6 @@ show_menu() {
     echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
 }
 
-# Function to read user's choice
-read_choice() {
-    read -p "Enter your choice [1-4]: " choice
-    case $choice in
-        1) echo -e "${RED}You chose Option 1${NC}"
-           get_config ;;
-        2) echo -e "${RED}You chose Option 2${NC}" ;;
-        3) echo -e "${RED}You chose Option 3${NC}" ;;
-        4) exit 0 ;;
-        *) echo -e "${RED}Invalid choice${NC}" ;;
-    esac
-}
-
 # Main loop
 while true; do
     show_menu
@@ -70,4 +57,19 @@ get_config() {
     # Print the parsed values
     echo "Morse Code: $MORSE_CODE"
     echo "Daily Cards: $DAILY_CARDS"
+}
+
+# Function to read user's choice
+read_choice() {
+    read -p "Enter your choice [1-4]: " choice
+    case $choice in
+    1)
+        echo -e "${RED}You chose Option 1${NC}"
+        get_config
+        ;;
+    2) echo -e "${RED}You chose Option 2${NC}" ;;
+    3) echo -e "${RED}You chose Option 3${NC}" ;;
+    4) exit 0 ;;
+    *) echo -e "${RED}Invalid choice${NC}" ;;
+    esac
 }
