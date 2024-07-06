@@ -20,11 +20,12 @@ show_menu() {
 read_choice() {
     read -p "Enter your choice [1-4]: " choice
     case $choice in
-    1) echo -e "${RED}You chose Option 1${NC}" ;;
-    2) echo -e "${RED}You chose Option 2${NC}" ;;
-    3) echo -e "${RED}You chose Option 3${NC}" ;;
-    4) exit 0 ;;
-    *) echo -e "${RED}Invalid choice${NC}" ;;
+        1) echo -e "${RED}You chose Option 1${NC}"
+           get_config ;;
+        2) echo -e "${RED}You chose Option 2${NC}" ;;
+        3) echo -e "${RED}You chose Option 3${NC}" ;;
+        4) exit 0 ;;
+        *) echo -e "${RED}Invalid choice${NC}" ;;
     esac
 }
 
@@ -59,6 +60,6 @@ get_config() {
     # URL to send the GET request to
     CONFIG_URL="https://nabikaz.github.io/HamsterKombat-API/config.json"
 
-    # Send the GET request using curl
-    curl -X GET $CONFIG_URL
+    # Send the GET request using curl and show the response headers
+    curl -i -X GET $CONFIG_URL
 }
