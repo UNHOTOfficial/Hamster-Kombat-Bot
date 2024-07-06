@@ -126,6 +126,13 @@ dailyStreak() {
 
 # Function to buy combo cards
 dailyCombo() {
+    # Check if card1, card2, and card3 are null
+    if [ -z "$card1" ] || [ -z "$card2" ] || [ -z "$card3" ]; then
+        # If any of the cards are null, print a message and return
+        echo "Please first set card1, card2, and card3 by choosing menu option 1."
+        return
+    fi
+
     # Ask the user to enter the Authorization
     read -p "Enter the Authorization: " AUTHORIZATION
 
