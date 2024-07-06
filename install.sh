@@ -25,7 +25,7 @@ DATA='{"cipher":"SWAP"}'
 # Send the POST request using curl
 curl -X POST $URL \
     -H "Content-Type: application/json" \
-    -H "Authorization: Bearer 1718921828436i88dkbR7Iu3Pgd2BSLMj7J0iwDLob4fuIAAlhnzpUaczMVBAafJnW4OvPflTUdQi1599637373" \
+    -H "Authorization: " \
     -H "Accept: application/json" \
     -H "Accept-Language: en-US,en;q=0.9" \
     -H "Referer: https://hamsterkombat.io/" \
