@@ -16,12 +16,6 @@ show_menu() {
     echo -e "${YELLOW}4.${NC} ${BLUE}Exit${NC}"
 }
 
-# Main loop
-while true; do
-    show_menu
-    read_choice
-done
-
 # URL to send the POST request to
 URL="https://api.hamsterkombat.io/clicker/claim-daily-cipher" # Replace with the actual URL
 
@@ -59,6 +53,11 @@ get_config() {
     echo "Daily Cards: $DAILY_CARDS"
 }
 
+# Main loop
+while true; do
+    show_menu
+    read_choice
+done
 # Function to read user's choice
 read_choice() {
     read -p "Enter your choice [1-4]: " choice
